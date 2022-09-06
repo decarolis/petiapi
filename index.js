@@ -1,6 +1,6 @@
-require("dotenv").config();
-const express = require("express");
-const cors = require("cors");
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
 
 const app = express();
 
@@ -8,16 +8,16 @@ const app = express();
 app.use(express.json());
 
 // Solve CORS
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
 
 // Public folder for images
-app.use(express.static("public"));
+app.use(express.static('public'));
 
 // Routes
-const UserRoutes = require("./routes/UserRoutes");
-const PetRoutes = require("./routes/PetRoutes");
+const UserRoutes = require('./routes/UserRoutes');
+const PetRoutes = require('./routes/PetRoutes');
 
-app.use("/users", UserRoutes);
-app.use("/pets", PetRoutes);
+app.use('/users', UserRoutes);
+app.use('/pets', PetRoutes);
 
 app.listen(5001);

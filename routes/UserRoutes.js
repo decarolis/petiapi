@@ -7,6 +7,7 @@ const { imageUpload } = require('../helpers/image-upload');
 
 router.post('/register', imageUpload.single('image'), UserController.register);
 router.post('/login', UserController.login);
+router.get('/favorites', UserController.getAllFavorites);
 router.get('/checkuser', UserController.checkUser);
 router.get('/:id', UserController.getUserById);
 router.patch('/favorites/:id', UserController.addPetToFav);

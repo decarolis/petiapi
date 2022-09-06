@@ -224,6 +224,11 @@ module.exports = class PetController {
     const token = getToken(req);
     const user = await getUserByToken(token);
 
+    if (!user) {
+      res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
+      return;
+    }
+
     if (pet.user._id.toString() !== user._id.toString()) {
       res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
       return;

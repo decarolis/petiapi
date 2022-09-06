@@ -15,7 +15,7 @@ module.exports = class UserController {
       name, email, phone, password, confirmpassword,
     } = req.body;
 
-    const image = req.file.filename;
+    const image = 'defaultimage.jpg';
 
     const active = true;
 
@@ -168,10 +168,13 @@ module.exports = class UserController {
     }
 
     // check if user has already favorited pet
+    let msg = '';
     if (user.favorites.indexOf(id) >= 0) {
       user.favorites.splice(user.favorites.indexOf(id), 1);
+      msg = `${pet.name} foi removido(a) dos favoritos com sucesso.`;
     } else {
       user.favorites.push(id);
+      msg = `${pet.name} foi adicionado(a) aos favoritos com sucesso.`;
     }
 
     try {
@@ -181,11 +184,22 @@ module.exports = class UserController {
         { new: true },
       );
       res.status(200).json({
-        message: `${pet.name} foi adicionado aos favoritos com sucesso.`,
+        message: `${msg}`,
       });
     } catch (error) {
       res.status(500).json({ message: error });
     }
+  }
+
+  static async getAllFavorites(req, res) {
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    const { favorites } = user;
+
+    const favPets = await Promise.all(favorites.map((item) => getPetById(item)));
+
+    res.status(200).json({ favPets });
   }
 
   static async getUserById(req, res) {
