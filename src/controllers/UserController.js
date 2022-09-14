@@ -127,10 +127,13 @@ module.exports = class UserController {
     let currentUser;
 
     if (req.headers.authorization) {
-      const token = getToken(req);
-      const decoded = jwt.verify(token, 'nossosecret');
-
-      currentUser = await User.findById(decoded.id).select('-password');
+      try {
+        const token = getToken(req);
+        const decoded = jwt.verify(token, 'nossosecret');
+        currentUser = await User.findById(decoded.id).select('-password');
+      } catch (error) {
+        res.status(500).json({ message: error });
+      }
     } else {
       currentUser = null;
     }
@@ -178,11 +181,7 @@ module.exports = class UserController {
     }
 
     try {
-      await User.findByIdAndUpdate(
-        { _id: user.id },
-        { $set: user },
-        { new: true },
-      );
+      await User.findByIdAndUpdate(user._id, user);
       res.status(200).json({
         message: `${msg}`,
       });
@@ -191,15 +190,24 @@ module.exports = class UserController {
     }
   }
 
-  static async getAllFavorites(req, res) {
+  static async getAllUserFavorites(req, res) {
+    // check if user is logged
     const token = getToken(req);
     const user = await getUserByToken(token);
 
+    if (!user) {
+      res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
+      return;
+    }
+
     const { favorites } = user;
 
-    const favPets = await Promise.all(favorites.map((item) => getPetById(item)));
-
-    res.status(200).json({ favPets });
+    try {
+      const pets = await Promise.all(favorites.map((item) => getPetById(item)));
+      res.status(200).json({ pets });
+    } catch (error) {
+      res.status(500).json({ message: error });
+    }
   }
 
   static async getUserById(req, res) {

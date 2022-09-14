@@ -18,10 +18,14 @@ const Pet = mongoose.model(
       required: true,
     },
     sex: {
+      type: String,
+      required: true,
+    },
+    years: {
       type: Number,
       required: true,
     },
-    age: {
+    months: {
       type: Number,
       required: true,
     },
@@ -38,7 +42,7 @@ const Pet = mongoose.model(
       required: true,
     },
     latLong: {
-      type: String,
+      type: Array,
       required: true,
     },
     state: {

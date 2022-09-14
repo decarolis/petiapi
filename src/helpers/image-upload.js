@@ -1,6 +1,8 @@
 const multer = require('multer');
 const path = require('path');
 
+const aleatorio = () => Math.floor(Math.random() * 100 + 100);
+
 // Destination to store the images
 const imageStorage = multer.diskStorage({
   destination(req, file, cb) {
@@ -12,10 +14,10 @@ const imageStorage = multer.diskStorage({
       folder = 'pets';
     }
 
-    cb(null, `public/images/${folder}`);
+    cb(null, path.resolve(__dirname, '..', '..', 'public', 'images', folder));
   },
   filename(req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname));
+    cb(null, `${Date.now()}_${+aleatorio()}${path.extname(file.originalname)}`);
   },
 });
 
@@ -25,7 +27,7 @@ const imageUpload = multer({
     if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
       return cb(new Error('Por favor, envie apenas jpg ou png!'));
     }
-    return cb(undefined, true);
+    return cb(null, true);
   },
 });
 

@@ -8,7 +8,21 @@ const app = express();
 app.use(express.json());
 
 // Solve CORS
-app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+
+const whiteList = [
+  'http://localhost:3000',
+  'http://192.168.1.117:3000',
+];
+
+app.use(cors({
+  origin(origin, callback) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+}));
 
 // Public folder for images
 app.use(express.static('public'));
