@@ -30,6 +30,7 @@ const User = mongoose.model(
     },
     active: {
       type: Boolean,
+      default: false,
     },
   }, { timestamps: true }),
 );

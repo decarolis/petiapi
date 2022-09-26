@@ -11,7 +11,7 @@ app.use(express.json());
 
 const whiteList = [
   'http://localhost:3000',
-  'http://192.168.1.117:3000',
+  'http://192.168.1.137:3000',
 ];
 
 app.use(cors({
@@ -34,4 +34,4 @@ const PetRoutes = require('./routes/PetRoutes');
 app.use('/users', UserRoutes);
 app.use('/pets', PetRoutes);
 
-app.listen(5001);
+app.listen(Number(process.env.APP_PORT));

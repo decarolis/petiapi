@@ -29,7 +29,11 @@ const Pet = mongoose.model(
       type: Number,
       required: true,
     },
-    weight: {
+    weightKg: {
+      type: Number,
+      required: true,
+    },
+    weightG: {
       type: Number,
       required: true,
     },

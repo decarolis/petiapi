@@ -9,7 +9,19 @@ module.exports = class PetController {
   // create a pet
   static async create(req, res) {
     const {
-      name, years, months, weight, type, specificType, sex, bio, latLong, state, city, district,
+      name,
+      years,
+      months,
+      weightKg,
+      weightG,
+      type,
+      specificType,
+      sex,
+      bio,
+      latLong,
+      state,
+      city,
+      district,
     } = req.body;
 
     const images = req.files;
@@ -47,7 +59,12 @@ module.exports = class PetController {
       return;
     }
 
-    if (!weight) {
+    if (!weightKg) {
+      res.status(422).json({ message: 'O peso é obrigatório!' });
+      return;
+    }
+
+    if (!weightG) {
       res.status(422).json({ message: 'O peso é obrigatório!' });
       return;
     }
@@ -89,7 +106,8 @@ module.exports = class PetController {
       sex,
       years,
       months,
-      weight,
+      weightKg,
+      weightG,
       bio,
       latLong,
       state,
@@ -114,7 +132,7 @@ module.exports = class PetController {
         newPet,
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
     }
   }
 
@@ -126,7 +144,7 @@ module.exports = class PetController {
         pets,
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
     }
   }
 
@@ -214,7 +232,7 @@ module.exports = class PetController {
         message: 'Pet removido com sucesso!',
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
     }
   }
 
@@ -222,7 +240,19 @@ module.exports = class PetController {
     const { id } = req.params;
 
     const {
-      name, years, months, weight, type, specificType, sex, bio, latLong, state, city, district,
+      name,
+      years,
+      months,
+      weightKg,
+      weightG,
+      type,
+      specificType,
+      sex,
+      bio,
+      latLong,
+      state,
+      city,
+      district,
     } = req.body;
 
     const images = [];
@@ -292,11 +322,17 @@ module.exports = class PetController {
     }
     updatedData.months = months;
 
-    if (!weight) {
+    if (!weightKg) {
       res.status(422).json({ message: 'O peso é obrigatório!' });
       return;
     }
-    updatedData.weight = weight;
+    updatedData.weightKg = weightKg;
+
+    if (!weightG) {
+      res.status(422).json({ message: 'O peso é obrigatório!' });
+      return;
+    }
+    updatedData.weightG = weightG;
 
     if (!bio) {
       res.status(422).json({ message: 'A bio é obrigatória!' });
@@ -329,7 +365,7 @@ module.exports = class PetController {
         message: 'Pet atualizado com sucesso!',
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
     }
   }
 };
