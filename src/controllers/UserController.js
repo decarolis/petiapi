@@ -18,8 +18,6 @@ module.exports = class UserController {
       name, email, phone, password, confirmpassword,
     } = req.body;
 
-    const image = 'defaultimage.jpg';
-
     // validations
     if (!name) {
       res.status(422).json({ message: 'O nome é obrigatório' });
@@ -33,11 +31,6 @@ module.exports = class UserController {
 
     if (!phone) {
       res.status(422).json({ message: 'O telefone é obrigatório' });
-      return;
-    }
-
-    if (!image) {
-      res.status(422).json({ message: 'A imagem é obrigatória' });
       return;
     }
 
@@ -76,7 +69,6 @@ module.exports = class UserController {
         name,
         email,
         phone,
-        image,
         password: passwordHash,
       }).save();
 
@@ -96,8 +88,7 @@ module.exports = class UserController {
   }
 
   static async activateAccount(req, res) {
-    const { id } = req.body;
-
+    const { id } = req.params;
     try {
       const user = await User.findOne({ _id: id });
       if (!user) {
@@ -359,7 +350,10 @@ module.exports = class UserController {
     const { favorites } = user;
 
     try {
-      const pets = await Promise.all(favorites.map((item) => getPetById(item)));
+      const petsFilter = await Promise.all(favorites.map((item) => getPetById(item)));
+      const pets = petsFilter.filter((item) => item !== null);
+      user.favorites = pets.map((item) => item._id.toString());
+      await User.findByIdAndUpdate(user._id, user);
       res.status(200).json({ pets });
     } catch (error) {
       res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
@@ -393,8 +387,6 @@ module.exports = class UserController {
 
     if (req.file) {
       user.image = req.file.filename;
-    } else {
-      user.image = 'defaultimage.jpg';
     }
 
     // validations

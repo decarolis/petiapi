@@ -1,4 +1,6 @@
 const { ObjectId } = require('mongoose').Types;
+const fsExtra = require('fs-extra');
+const path = require('path');
 const Pet = require('../models/Pet');
 
 // helpers
@@ -127,6 +129,7 @@ module.exports = class PetController {
 
     try {
       const newPet = await pet.save();
+      await fsExtra.rename(path.resolve(__dirname, '..', '..', 'public', 'images', 'pets', 'newFolder'), path.resolve(__dirname, '..', '..', 'public', 'images', 'pets', newPet._id.toString()));
       res.status(201).json({
         message: 'Pet cadastrado com sucesso!',
         newPet,
@@ -163,7 +166,7 @@ module.exports = class PetController {
         pets,
       });
     } catch (error) {
-      res.status(500).json({ message: error });
+      res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
     }
   }
 
@@ -228,6 +231,8 @@ module.exports = class PetController {
 
     try {
       await Pet.findByIdAndRemove(id);
+      fsExtra.removeSync(path.resolve(__dirname, '..', '..', 'public', 'images', 'pets', id));
+
       res.status(200).json({
         message: 'Pet removido com sucesso!',
       });

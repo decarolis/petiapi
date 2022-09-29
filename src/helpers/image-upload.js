@@ -1,20 +1,34 @@
 const multer = require('multer');
 const path = require('path');
+const fsExtra = require('fs-extra');
 
 const aleatorio = () => Math.floor(Math.random() * 100 + 100);
+let once = true;
 
 // Destination to store the images
 const imageStorage = multer.diskStorage({
   destination(req, file, cb) {
+    let parentFolder = '';
     let folder = '';
 
     if (req.baseUrl.includes('users')) {
-      folder = 'users';
-    } else if (req.baseUrl.includes('pets')) {
-      folder = 'pets';
+      parentFolder = 'users';
+    }
+    if (req.baseUrl.includes('pets')) {
+      parentFolder = 'pets';
+    }
+    if (req.originalUrl === '/pets/create') {
+      folder = 'newFolder';
+    } else {
+      folder = req.body._id;
     }
 
-    cb(null, path.resolve(__dirname, '..', '..', 'public', 'images', folder));
+    if (once) {
+      fsExtra.emptyDirSync(path.resolve(__dirname, '..', '..', 'public', 'images', parentFolder, folder));
+      once = false;
+    }
+
+    cb(null, path.resolve(__dirname, '..', '..', 'public', 'images', parentFolder, folder));
   },
   filename(req, file, cb) {
     cb(null, `${Date.now()}_${+aleatorio()}${path.extname(file.originalname)}`);
@@ -24,7 +38,7 @@ const imageStorage = multer.diskStorage({
 const imageUpload = multer({
   storage: imageStorage,
   fileFilter(req, file, cb) {
-    if (!file.originalname.match(/\.(png|jpg|jpeg)$/)) {
+    if (file.mimetype !== 'image/png' && file.mimetype !== 'image/jpeg' && file.mimetype !== 'image/jpg') {
       return cb(new multer.MulterError('EXTENSION'));
     }
     return cb(null, true);
@@ -33,8 +47,8 @@ const imageUpload = multer({
 });
 
 const uploadImages = (req, res, next) => {
+  once = true;
   const upload = imageUpload.array('images', 8);
-
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {
@@ -55,6 +69,7 @@ const uploadImages = (req, res, next) => {
 };
 
 const uploadImage = (req, res, next) => {
+  once = true;
   const upload = imageUpload.single('image');
   upload(req, res, (err) => {
     if (err instanceof multer.MulterError) {
