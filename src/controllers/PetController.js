@@ -142,9 +142,23 @@ module.exports = class PetController {
   // get all pets
   static async getAll(req, res) {
     try {
-      const pets = await Pet.find().select('-user').sort('-createdAt');
+      const page = parseInt(req.query.page, 10) - 1 || 0;
+      const search = req.query.search || '';
+      const sort = { createdAt: parseInt(req.query.sort, 10) || -1 };
+      const limit = 4;
+
+      const pets = await Pet.find({ name: { $regex: search, $options: 'i' } })
+        .sort(sort)
+        .skip(page * limit)
+        .limit(limit);
+
+      const total = await Pet.countDocuments({
+        name: { $regex: search, $options: 'i' },
+      });
+
+      // const pets = await Pet.find().select('-user').sort('-createdAt');
       res.status(200).json({
-        pets,
+        total, pets,
       });
     } catch (error) {
       res.status(500).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });

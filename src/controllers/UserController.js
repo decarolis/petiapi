@@ -77,9 +77,16 @@ module.exports = class UserController {
         token: crypto.randomBytes(32).toString('hex'),
       }).save();
 
-      const url = `${process.env.APP_URL}login/${user.id}/verify/${token.token}`;
+      const html = `<h1>Olá ${user.name}, obrigado por se registrar na petí.</h1><br/>
+      <br/>
+      <p>Acesse o link abaixo para confirmar seu email e realizar seu primeiro login.</p><br/>
+      <br/>
+      <p>${process.env.APP_URL}login/${user.id}/verify/${token.token}<p>
+      <br/>
+      <p>Muito obrigado,</p><br/>
+      <p>Equipe petí.</p><br/>`;
 
-      await sendEmail(user.email, 'Verificação de email', url);
+      await sendEmail(user.email, 'Verificação de email', html);
 
       res.status(200).json({ message: `Um email de confirmação foi enviado para ${user.email}. Acesse o link no corpo da mensagem para ativar sua conta e realizar seu primeiro acesso.` });
     } catch (error) {
@@ -195,8 +202,15 @@ module.exports = class UserController {
         }).save();
       }
 
-      // const url = `${process.env.APP_URL}forgotmypassword/${user._id}/${token.token}/`;
-      // await sendEmail(user.email, 'Password Reset', url);
+      const html = `<h1>Olá ${user.name}.</h1><br/>
+      <br/>
+      <p>Acesse o link abaixo para redefinir sua senha.</p><br/>
+      <br/>
+      <p>${process.env.APP_URL}login/${user.id}/verify/${token.token}<p>
+      <br/>
+      <p>Muito obrigado,</p><br/>
+      <p>Equipe petí.</p><br/>`;
+      await sendEmail(user.email, 'Password Reset', html);
 
       res
         .status(200)
