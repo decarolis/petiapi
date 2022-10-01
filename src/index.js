@@ -10,7 +10,7 @@ app.use(express.json());
 
 // Solve CORS
 const whiteList = [
-  'http://192.168.1.137',
+  'http://109.49.163.174',
 ];
 
 app.use(cors({
