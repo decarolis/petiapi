@@ -206,7 +206,7 @@ module.exports = class UserController {
       <br/>
       <p>Acesse o link abaixo para redefinir sua senha.</p><br/>
       <br/>
-      <p>${process.env.APP_URL}login/${user.id}/verify/${token.token}<p>
+      <p>${process.env.APP_URL}forgotmypassword/${user._id}/${token.token}/<p>
       <br/>
       <p>Muito obrigado,</p><br/>
       <p>Equipe petí.</p><br/>`;
