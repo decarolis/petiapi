@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -8,21 +9,21 @@ const app = express();
 app.use(express.json());
 
 // Solve CORS
-
 const whiteList = [
-  'http://localhost:3000',
-  'http://192.168.1.137:3000',
+  'http://192.168.1.137',
 ];
 
 app.use(cors({
   origin(origin, callback) {
-    if (whiteList.indexOf(origin) !== -1 || !origin) {
+    if (whiteList.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
   },
 }));
+
+app.use(helmet());
 
 // Public folder for images
 app.use(express.static('public'));
