@@ -10,12 +10,14 @@ app.use(express.json());
 
 // Solve CORS
 const whiteList = [
-  'http://109.49.163.174',
+  'https://pt.wikipedia.org/',
+  'http://192.168.1.137:3000',
+  'http://localhost:3000',
 ];
 
 app.use(cors({
   origin(origin, callback) {
-    if (whiteList.indexOf(origin) !== -1) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));

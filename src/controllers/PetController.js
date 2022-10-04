@@ -141,20 +141,66 @@ module.exports = class PetController {
 
   // get all pets
   static async getAll(req, res) {
+    const minAge = parseInt(req.query.minAge, 10);
+    const maxAge = parseInt(req.query.maxAge, 10);
+    const minWeight = parseInt(req.query.minWeight, 10);
+    const maxWeight = parseInt(req.query.maxWeight, 10);
+
+    const {
+      sex, location, type,
+    } = req.query;
+
+    const limit = 4;
+    const page = parseInt(req.query.page, 10) - 1 || 0;
+    const sort = { createdAt: parseInt(req.query.sort, 10) || -1 };
+    const search = req.query.search || '';
+
     try {
-      const page = parseInt(req.query.page, 10) - 1 || 0;
-      const search = req.query.search || '';
-      const sort = { createdAt: parseInt(req.query.sort, 10) || -1 };
-      const limit = 4;
-
-      const pets = await Pet.find({ name: { $regex: search, $options: 'i' } })
+      let pets = await Pet.find({
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { specificType: { $regex: search, $options: 'i' } },
+        ],
+      })
         .sort(sort)
-        .skip(page * limit)
-        .limit(limit);
+        .select('-user');
 
-      const total = await Pet.countDocuments({
-        name: { $regex: search, $options: 'i' },
-      });
+      if (type) {
+        pets = [...pets].filter((pet) => pet.type === type);
+      }
+
+      if (sex) {
+        pets = [...pets].filter((pet) => pet.sex === sex);
+      }
+
+      if (minAge) {
+        pets = [...pets].filter((pet) => pet.years + (pet.months / 12) >= minAge);
+      }
+
+      if (maxAge) {
+        pets = [...pets].filter((pet) => pet.years + (pet.months / 12) <= maxAge);
+      }
+
+      if (minWeight) {
+        pets = [...pets].filter((pet) => pet.weightKg + (pet.weightG / 1000) >= minWeight);
+      }
+
+      if (maxWeight) {
+        pets = [...pets].filter((pet) => pet.weightKg + (pet.weightG / 1000) <= maxWeight);
+      }
+
+      if (location) {
+        pets = [...pets].filter((pet) => pet.state.toLowerCase().includes(location.toLowerCase())
+          || pet.state.toLowerCase().includes(`${location.toLowerCase()},`)
+          || pet.city.toLowerCase().includes(location.toLowerCase())
+          || pet.city.toLowerCase().includes(`${location.toLowerCase()},`)
+          || pet.district.toLowerCase().includes(location.toLowerCase())
+          || pet.district.toLowerCase().includes(`${location.toLowerCase()},`));
+      }
+
+      const total = pets.length;
+
+      pets = [...pets].splice(page * limit, limit);
 
       // const pets = await Pet.find().select('-user').sort('-createdAt');
       res.status(200).json({
