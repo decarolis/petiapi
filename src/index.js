@@ -15,6 +15,7 @@ const whiteList = [
   'https://peti.pt/',
   'https://petiapp.netlify.app',
   'https://petiapp.netlify.app/',
+  'http://localhost:3000',
 ];
 
 const corsOptions = {
@@ -25,25 +26,9 @@ const corsOptions = {
       callback(new Error('Not allowed by CORS'));
     }
   },
-  methods: ['GET', 'POST'],
-  credentials: true,
 };
 
 app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'https://petiapp.netlify.app');
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept',
-  );
-  res.setHeader(
-    'Access-Control-Allow-Methods',
-    'GET, POST, PATCH, DELETE, OPTIONS',
-  );
-  res.setHeader('content-type', 'application/json');
-  next();
-});
 
 app.use(helmet());
 
