@@ -10,8 +10,7 @@ app.use(express.json());
 
 // Solve CORS
 const whiteList = [
-  'https://pt.wikipedia.org/',
-  'http://192.168.1.137:3000',
+  'https://peti.pt/',
   'http://localhost:3000',
 ];
 
