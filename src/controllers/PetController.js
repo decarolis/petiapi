@@ -203,7 +203,7 @@ module.exports = class PetController {
       pets = [...pets].splice(page * limit, limit);
 
       // const pets = await Pet.find().select('-user').sort('-createdAt');
-      res.status(200).json({
+      res.status(200).header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/').json({
         total, pets,
       });
     } catch (error) {
