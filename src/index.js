@@ -11,6 +11,7 @@ app.use(express.json());
 // Solve CORS
 
 const whiteList = [
+  'https://petiapp.netlify.app',
   'https://peti.pt',
   'http://localhost:3000',
 ];
