@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
-// const cors = require('cors');
-// const helmet = require('helmet');
+const cors = require('cors');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -10,25 +10,43 @@ app.use(express.json());
 
 // Solve CORS
 
-// const whiteList = [
-//   'https://peti.pt',
-//   'http://localhost',
-//   'https://petiapp.netlify.app',
-// ];
+const whiteList = [
+  'https://peti.pt',
+  'https://peti.pt/adopt',
+];
 
-// const corsOptions = {
-//   originorigin(origin, callback) {
-//     if (whiteList.indexOf(origin) !== -1 || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error('Not allowed by CORS'));
-//     }
-//   },
-// };
+let reqOrigin;
 
-// app.use(cors(corsOptions));
+const corsOptions = {
+  originorigin(origin, callback) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      reqOrigin = origin;
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST'],
+  credentials: true,
+};
 
-// app.use(helmet());
+app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', reqOrigin);
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PATCH, DELETE, OPTIONS',
+  );
+  res.setHeader('content-type', 'application/json');
+  next();
+});
+
+app.use(helmet());
 
 // Public folder for images
 app.use(express.static('public'));
