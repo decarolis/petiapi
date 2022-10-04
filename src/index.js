@@ -17,12 +17,9 @@ const whiteList = [
   'https://petiapp.netlify.app/',
 ];
 
-let index;
-
 const corsOptions = {
   originorigin(origin, callback) {
     if (whiteList.indexOf(origin) !== -1 || !origin) {
-      index = whiteList.indexOf(origin);
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -35,7 +32,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', whiteList[index]);
+  res.setHeader('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
