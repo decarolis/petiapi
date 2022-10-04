@@ -12,9 +12,6 @@ app.use(express.json());
 
 const whiteList = [
   'https://peti.pt',
-  'https://peti.pt/',
-  'https://petiapp.netlify.app',
-  'https://petiapp.netlify.app/',
   'http://localhost:3000',
 ];
 
