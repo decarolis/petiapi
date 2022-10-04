@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+// const cors = require('cors');
 // const helmet = require('helmet');
 
 const app = express();
@@ -10,22 +10,23 @@ app.use(express.json());
 
 // Solve CORS
 
-const whiteList = [
-  'https://peti.pt',
-  'https://petiapp.netlify.app',
-];
+// const whiteList = [
+//   'https://peti.pt',
+//   'http://localhost',
+//   'https://petiapp.netlify.app',
+// ];
 
-const corsOptions = {
-  originorigin(origin, callback) {
-    if (whiteList.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-};
+// const corsOptions = {
+//   originorigin(origin, callback) {
+//     if (whiteList.indexOf(origin) !== -1 || !origin) {
+//       callback(null, true);
+//     } else {
+//       callback(new Error('Not allowed by CORS'));
+//     }
+//   },
+// };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
 
 // app.use(helmet());
 
