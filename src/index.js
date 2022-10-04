@@ -17,6 +17,7 @@ app.use((req, res, next) => {
 // Solve CORS
 const whiteList = [
   'https://peti.pt/',
+  'https://petiapp.netlify.app/',
   'http://localhost:3000',
 ];
 
