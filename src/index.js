@@ -9,27 +9,20 @@ const app = express();
 app.use(express.json());
 
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Origin', 'https://peti.pt'); // update to match the domain you will make the request from
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
 });
 
 // Solve CORS
-const whiteList = [
-  'https://peti.pt/',
-  'https://petiapp.netlify.app/',
-  'http://localhost:3000',
-];
+const corsOptions = {
+  origin: ['https://petiapp.netlify.app', 'https://petiapp.netlify.app/', 'https://peti.pt', 'https://peti.pt/'],
+  credentials: true, // access-control-allow-credentials:true
+  preflightContinue: true,
+  optionSuccessStatus: 200,
+};
 
-app.use(cors({
-  origin(origin, callback) {
-    if (whiteList.indexOf(origin) !== -1 || !origin) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-}));
+app.use(cors(corsOptions));
 
 app.use(helmet());
 
