@@ -8,21 +8,28 @@ const app = express();
 // Config JSON response
 app.use(express.json());
 
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/'); // update to match the domain you will make the request from
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
-
 // Solve CORS
 const corsOptions = {
-  origin: ['https://petiapp.netlify.app', 'https://petiapp.netlify.app/', 'https://peti.pt', 'https://peti.pt/'],
-  credentials: true, // access-control-allow-credentials:true
-  preflightContinue: true,
-  optionSuccessStatus: 200,
+  origin: ['https://petiapp.netlify.app', 'https://peti.pt'],
+  methods: ['GET', 'POST'],
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://peti.pt');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept',
+  );
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PATCH, DELETE, OPTIONS',
+  );
+  res.setHeader('content-type', 'application/json');
+  next();
+});
 
 app.use(helmet());
 
