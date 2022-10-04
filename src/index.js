@@ -15,12 +15,9 @@ const whiteList = [
   'https://peti.pt/adopt',
 ];
 
-let reqOrigin;
-
 const corsOptions = {
   originorigin(origin, callback) {
     if (whiteList.indexOf(origin) !== -1 || !origin) {
-      reqOrigin = origin;
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
@@ -33,7 +30,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', reqOrigin);
+  res.setHeader('Access-Control-Allow-Origin', 'https://peti.pt');
   res.setHeader(
     'Access-Control-Allow-Headers',
     'Origin, X-Requested-With, Content-Type, Accept',
