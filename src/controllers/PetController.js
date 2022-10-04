@@ -203,7 +203,7 @@ module.exports = class PetController {
       pets = [...pets].splice(page * limit, limit);
 
       // const pets = await Pet.find().select('-user').sort('-createdAt');
-      res.status(200).json({
+      res.status(200).header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/').json({
         total, pets,
       });
     } catch (error) {
@@ -216,7 +216,7 @@ module.exports = class PetController {
     const user = await getUserByToken(token);
 
     if (!user) {
-      res.header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/').status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
+      res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
       return;
     }
 
