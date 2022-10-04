@@ -8,10 +8,15 @@ const app = express();
 // Config JSON response
 app.use(express.json());
 
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://peti.pt/'); // update to match the domain you will make the request from
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // Solve CORS
 const whiteList = [
   'https://peti.pt/',
-  'https://petiapp.netlify.app/',
   'http://localhost:3000',
 ];
 

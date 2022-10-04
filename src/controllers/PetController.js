@@ -216,7 +216,7 @@ module.exports = class PetController {
     const user = await getUserByToken(token);
 
     if (!user) {
-      res.header('Access-Control-Allow-Origin', 'https://petiapp.netlify.app/').status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
+      res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
       return;
     }
 
