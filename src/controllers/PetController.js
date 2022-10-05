@@ -239,20 +239,25 @@ module.exports = class PetController {
       return;
     }
 
-    // check user
-    const token = getToken(req);
-    const user = await getUserByToken(token);
-
     // check if pet exists
     const pet = await Pet.findOne({ _id: id });
-
-    // check if user is the owner
-    const isOwner = pet.user._id.toString() === user.id.toString();
 
     if (!pet) {
       res.status(404).json({ message: 'Pet não encontrado!' });
       return;
     }
+
+    // check user
+    const token = getToken(req);
+    const user = await getUserByToken(token);
+
+    let isOwner;
+
+    if (user) {
+      isOwner = pet.user._id.toString() === user.id.toString();
+    }
+
+    // check if user is the owner
 
     res.status(200).json({
       pet, isOwner,
