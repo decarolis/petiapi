@@ -247,14 +247,16 @@ module.exports = class PetController {
       return;
     }
 
+    let isOwner = false;
+
     // check user
-    const token = getToken(req);
-    const user = await getUserByToken(token);
-
-    let isOwner;
-
-    if (user) {
-      isOwner = pet.user._id.toString() === user.id.toString();
+    const authHeader = req.headers.authorization;
+    if (authHeader) {
+      const token = getToken(req);
+      const user = await getUserByToken(token);
+      if (user) {
+        isOwner = pet.user._id.toString() === user.id.toString();
+      }
     }
 
     // check if user is the owner
