@@ -150,7 +150,7 @@ module.exports = class PetController {
       sex, location, type,
     } = req.query;
 
-    const limit = 4;
+    const limit = 6;
     const page = parseInt(req.query.page, 10) - 1 || 0;
     const sort = { createdAt: parseInt(req.query.sort, 10) || -1 };
     const search = req.query.search || '';
