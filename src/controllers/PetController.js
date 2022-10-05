@@ -243,11 +243,6 @@ module.exports = class PetController {
     const token = getToken(req);
     const user = await getUserByToken(token);
 
-    if (!user) {
-      res.status(422).json({ message: 'Houve um problema ao processar sua solicitação, tente novamente mais tarde!' });
-      return;
-    }
-
     // check if pet exists
     const pet = await Pet.findOne({ _id: id });
 
